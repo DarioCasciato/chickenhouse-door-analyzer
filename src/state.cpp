@@ -50,7 +50,7 @@ namespace State
 
             log("closing detected! Time: %d\n Sunset time: %d\n", unixTime, sunriseTime);
 
-            // TODO implement sending to Database
+            // TODO implement sending to Database or flash
         }
 
         if(Hardware::reedMidway.getEdgeNeg())
@@ -60,7 +60,7 @@ namespace State
 
             log("opening detected! Time: %d\n Sunrise time: %d\n", unixTime, sunriseTime);
 
-            // TODO implement sending to Database
+            // TODO implement sending to Database or flash
         }
     }
 
