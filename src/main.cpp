@@ -9,6 +9,7 @@
 #include "EdgeDetection.h"
 #include "configurations.h"
 #include "state.h"
+#include "Flash/Flash.h"
 #include "ESPWiFi/espWiFi.h"
 
 void refreshData();
@@ -18,6 +19,9 @@ void refreshData();
 void setup()
 {
   Serial.begin(115200);
+
+  Flash::init();
+
   ESP.wdtEnable(WDTO_1S);
 
   Wifi::establish();
