@@ -50,7 +50,6 @@ namespace State
 
             log("closing detected! Time: %d\n Sunset time: %d\n", closeEvent.timestamp, closeEvent.SunTime);
 
-            // TODO implement sending to Database or flash
             Flash::closeEvents.write(&closeEvent);
         }
 
@@ -61,7 +60,6 @@ namespace State
 
             log("opening detected! Time: %d\n Sunrise time: %d\n", openEvent.timestamp, openEvent.SunTime);
 
-            // TODO implement sending to Database or flash
             Flash::openEvents.write(&openEvent);
         }
     }
