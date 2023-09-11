@@ -8,12 +8,12 @@
 #include "Timer.h"
 #include "APIHandlers/apiHandler.h"
 #include "Logging.h"
+#include "Flash/Flash.h"
 
 namespace
 {
-    uint32_t unixTime = 0;
-    uint32_t sunriseTime = 0;
-    uint32_t sunsetTime = 0;
+    EventData openEvent;
+    EventData closeEvent;
 }
 
 //------------------------------------------------------------------------------
@@ -45,22 +45,24 @@ namespace State
     {
         if(Hardware::reedMidway.getEdgePos())
         {
-            unixTime = APIHandler::getUnixTime();
-            sunriseTime = APIHandler::getSunsetTime();
+            closeEvent.timestamp = APIHandler::getUnixTime();
+            closeEvent.SunTime = APIHandler::getSunsetTime();
 
-            log("closing detected! Time: %d\n Sunset time: %d\n", unixTime, sunriseTime);
+            log("closing detected! Time: %d\n Sunset time: %d\n", closeEvent.timestamp, closeEvent.SunTime);
 
             // TODO implement sending to Database or flash
+            Flash::closeEvents.write(&closeEvent);
         }
 
         if(Hardware::reedMidway.getEdgeNeg())
         {
-            unixTime = APIHandler::getUnixTime();
-            sunriseTime = APIHandler::getSunriseTime();
+            openEvent.timestamp = APIHandler::getUnixTime();
+            openEvent.SunTime = APIHandler::getSunriseTime();
 
-            log("opening detected! Time: %d\n Sunrise time: %d\n", unixTime, sunriseTime);
+            log("opening detected! Time: %d\n Sunrise time: %d\n", openEvent.timestamp, openEvent.SunTime);
 
             // TODO implement sending to Database or flash
+            Flash::openEvents.write(&openEvent);
         }
     }
 

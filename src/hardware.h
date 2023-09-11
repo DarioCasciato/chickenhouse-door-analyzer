@@ -6,6 +6,7 @@
 #define _TEMPLATE_PROJECT_HARDWARE_
 
 #include "configurations.h"
+#include "EdgeDetection.h"
 #include "gpio.h"
 
 
