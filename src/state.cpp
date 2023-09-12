@@ -43,7 +43,7 @@ namespace State
     // State implementations
     void stateIdle()
     {
-        if(Hardware::reedMidway.getEdgePos())
+        if(Hardware::reedEnd.getEdgePos())
         {
             closeEvent.timestamp = APIHandler::getUnixTime();
             closeEvent.SunTime = APIHandler::getSunsetTime();
@@ -53,7 +53,7 @@ namespace State
             Flash::closeEvents.write(&closeEvent);
         }
 
-        if(Hardware::reedMidway.getEdgeNeg())
+        if(Hardware::reedEnd.getEdgeNeg())
         {
             openEvent.timestamp = APIHandler::getUnixTime();
             openEvent.SunTime = APIHandler::getSunriseTime();

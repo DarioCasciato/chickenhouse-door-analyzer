@@ -46,8 +46,9 @@ uint32_t APIHandler::getSunsetTime()
     uint32_t sunsetTime = 0;
     if (WiFi.status() == WL_CONNECTED)
     {
+        WiFiClient client;
         HTTPClient http;
-        http.begin(String(api_suntime) + String(api_key));
+        http.begin(client, String(api_suntime) + String(api_key));  // Updated line
         int httpCode = http.GET();
 
         if (httpCode > 0)
@@ -71,8 +72,9 @@ uint32_t APIHandler::getSunriseTime()
     uint32_t sunriseTime = 0;
     if (WiFi.status() == WL_CONNECTED)
     {
+        WiFiClient client;
         HTTPClient http;
-        http.begin(String(api_suntime) + String(api_key));
+        http.begin(client, String(api_suntime) + String(api_key));  // Updated line
         int httpCode = http.GET();
 
         if (httpCode > 0)

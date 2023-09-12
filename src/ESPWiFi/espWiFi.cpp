@@ -5,6 +5,13 @@
 #include "espWiFi.h"
 #include "configurations.h"
 
+namespace
+{
+    inline const char* ssid = "Wi-Fi 2";
+    inline const char* password = "rc7145!!";
+}
+
+
 void Wifi::establish()
 {
     WiFi.hostname("Chickendoor Monitor");
