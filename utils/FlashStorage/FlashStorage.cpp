@@ -108,7 +108,7 @@ bool FlashStorage::write(uint16_t index, void* data)
         if (writeAddr + header_.dataSize_ > header_.nextAddr_)
         {
             header_.nextAddr_ = writeAddr + header_.dataSize_;
-            header_.numEntries_ = index + 1;
+            header_.numEntries_ = (header_.nextAddr_ - header_.startAddr_) / header_.dataSize_;
             updateHeader();
         }
 

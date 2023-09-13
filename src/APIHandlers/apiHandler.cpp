@@ -4,6 +4,7 @@
 
 #include "apiHandler.h"
 #include "configurations.h"
+#include <ArduinoJson.h>
 
 // returs the current unix time. uses api_datetime from configurations.h
 // parses the response from the API and returns the unix time
@@ -18,20 +19,19 @@ uint32_t APIHandler::getUnixTime()
     if (httpCode > 0)
     {
         String payload = http.getString();
-        int index = payload.indexOf("unixtime");
+        http.end();  // Close the connection as soon as you get the payload
 
-        if (index != -1)
+        DynamicJsonDocument doc(1024);  // Create a DynamicJsonDocument with a suitable capacity
+        DeserializationError error = deserializeJson(doc, payload);  // Parse the JSON payload
+
+        if (error)  // Check for parsing errors
         {
-          String unixTime = payload.substring(index + 11, index + 21);
-          http.end();
-          return unixTime.toInt();
+            Serial.println("Failed to parse JSON");
+            return 0;
         }
-        else
-        {
-          Serial.println("unixtime not found in API response");
-          http.end();
-          return 0;
-        }
+
+        uint32_t unixTime = doc["unixtime"];  // Extract the Unix time
+        return unixTime;
     }
     else
     {
@@ -48,24 +48,29 @@ uint32_t APIHandler::getSunsetTime()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_suntime) + String(api_key));  // Updated line
+        http.begin(client, String(api_suntime) + String(api_key));
         int httpCode = http.GET();
 
         if (httpCode > 0)
         {
             String payload = http.getString();
-            int index = payload.indexOf("\"sunset\":");
-            if (index != -1)
-            {
-                String sunset = payload.substring(index + 9, index + 19);
-                sunsetTime = sunset.toInt();
-            }
-        }
+            http.end();  // Close the connection
 
-        http.end();
+            DynamicJsonDocument doc(2048);  // Create a DynamicJsonDocument
+            DeserializationError error = deserializeJson(doc, payload);
+
+            if (error)
+            {
+                Serial.println("Failed to parse JSON");
+                return 0;
+            }
+
+            sunsetTime = doc["sys"]["sunset"];  // Extract sunset time
+        }
     }
     return sunsetTime;
 }
+
 
 uint32_t APIHandler::getSunriseTime()
 {
@@ -74,21 +79,25 @@ uint32_t APIHandler::getSunriseTime()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_suntime) + String(api_key));  // Updated line
+        http.begin(client, String(api_suntime) + String(api_key));
         int httpCode = http.GET();
 
         if (httpCode > 0)
         {
             String payload = http.getString();
-            int index = payload.indexOf("\"sunrise\":");
-            if (index != -1)
-            {
-                String sunrise = payload.substring(index + 10, index + 20);
-                sunriseTime = sunrise.toInt();
-            }
-        }
+            http.end();  // Close the connection
 
-        http.end();
+            DynamicJsonDocument doc(2048);  // Create a DynamicJsonDocument
+            DeserializationError error = deserializeJson(doc, payload);
+
+            if (error)
+            {
+                Serial.println("Failed to parse JSON");
+                return 0;
+            }
+
+            sunriseTime = doc["sys"]["sunrise"];  // Extract sunrise time
+        }
     }
     return sunriseTime;
 }

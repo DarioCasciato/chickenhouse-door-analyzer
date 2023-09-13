@@ -13,6 +13,10 @@ namespace Flash
     extern FlashStorage openEvents;
     extern FlashStorage closeEvents;
 
+    /// @brief initializes the flash memory
     void init();
+
+    /// @brief clears all flash storages
+    void clear();
 
 } // namespace Flash

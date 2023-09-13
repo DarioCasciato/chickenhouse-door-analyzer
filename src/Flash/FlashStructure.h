@@ -18,8 +18,8 @@ namespace Flash
 
 struct EventData
 {
-    uint8_t timestamp;
-    uint8_t SunTime;
+    uint32_t timestamp;
+    uint32_t SunTime;
 };
 
 

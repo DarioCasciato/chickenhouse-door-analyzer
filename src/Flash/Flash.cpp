@@ -3,6 +3,7 @@
 // =============================================================================
 
 #include "Flash.h"
+#include "Logging.h"
 
 #define MAGIC_NUMBER 0x1234
 
@@ -20,6 +21,14 @@ namespace Flash
         #else
         EEPROM.begin();
         #endif
+
+        log("Flash memory initialized\n");
+    }
+
+    void clear()
+    {
+        openEvents.clear();
+        closeEvents.clear();
     }
 
 } // namespace Flash

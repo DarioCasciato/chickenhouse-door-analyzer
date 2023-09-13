@@ -20,14 +20,15 @@ namespace
 
 namespace State
 {
-    States state = States::st_idle;
+    // States state = States::st_idle;
+    States state = States::st_flashReading;
 
     void stateDriver()
     {
         switch (State::state)
         {
         case State::st_idle: stateIdle(); break;
-        case State::st_error: stateError(); break;
+        case State::st_flashReading: stateFlashReading(); break;
 
         default:    // catch invalid state (implement safety backup)
         goto exception;
@@ -48,7 +49,7 @@ namespace State
             closeEvent.timestamp = APIHandler::getUnixTime();
             closeEvent.SunTime = APIHandler::getSunsetTime();
 
-            log("closing detected! Time: %d\n Sunset time: %d\n", closeEvent.timestamp, closeEvent.SunTime);
+            log("\nclosing detected! \nTime: %d\nSunset time: %d\n", closeEvent.timestamp, closeEvent.SunTime);
 
             Flash::closeEvents.write(&closeEvent);
         }
@@ -58,15 +59,29 @@ namespace State
             openEvent.timestamp = APIHandler::getUnixTime();
             openEvent.SunTime = APIHandler::getSunriseTime();
 
-            log("opening detected! Time: %d\n Sunrise time: %d\n", openEvent.timestamp, openEvent.SunTime);
 
             Flash::openEvents.write(&openEvent);
+            log("\nopening detected! \nTime: %d\nSunrise time: %d\n", openEvent.timestamp, openEvent.SunTime);
         }
     }
 
-    void stateError()
+    void stateFlashReading()
     {
+        log("\nOpen events:");
+        for(uint8_t i = 0; i < Flash::openEvents.getNumEntries(); i++)
+        {
+            Flash::openEvents.read(i, &openEvent);
+            log("Event %d:\tTime: %d   Sunrise time: %d", openEvent.timestamp, openEvent.SunTime);
+        }
 
+        log("\n\nClose events:");
+        for(uint8_t i = 0; i < Flash::closeEvents.getNumEntries(); i++)
+        {
+            Flash::closeEvents.read(i, &closeEvent);
+            log("Event %d:\tTime: %d   Sunset time: %d", closeEvent.timestamp, closeEvent.SunTime);
+        }
+
+        for(;;) { delay(500); }
     }
 } // namespace State
 
