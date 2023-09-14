@@ -53,7 +53,7 @@ namespace State
 
             log("\nclosing detected! \nTime: %d\nSunset time: %d\n", closeEvent.timestamp, closeEvent.SunTime);
 
-            Flash::closeEvents.write(&closeEvent);
+            Flash::closeEvents.write(static_cast<void*>(&closeEvent));
         }
 
         if(Hardware::reedEnd.getEdgeNeg())
@@ -62,7 +62,7 @@ namespace State
             openEvent.SunTime = APIHandler::getSunriseTime();
 
 
-            Flash::openEvents.write(&openEvent);
+            Flash::openEvents.write(static_cast<void*>(&openEvent));
             log("\nopening detected! \nTime: %d\nSunrise time: %d\n", openEvent.timestamp, openEvent.SunTime);
         }
 
