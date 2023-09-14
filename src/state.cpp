@@ -22,8 +22,8 @@ namespace
 
 namespace State
 {
-    // States state = States::st_idle;
-    States state = States::st_flashReading;
+    States state = States::st_idle;
+    //States state = States::st_flashReading;
 
     void stateDriver()
     {
@@ -100,7 +100,7 @@ namespace State
             Flash::openEvents.read(i, &openEvent);
 
             // Log the event
-            log("Event %d:\tTime: %d   Sunrise time: %d", openEvent.timestamp, openEvent.SunTime);
+            log("Event %d:\tTime: %d   Sunrise time: %d", i+1, openEvent.timestamp, openEvent.SunTime);
         }
 
         // Log close events
@@ -111,7 +111,7 @@ namespace State
             Flash::closeEvents.read(i, &closeEvent);
 
             // Log the event
-            log("Event %d:\tTime: %d   Sunset time: %d", closeEvent.timestamp, closeEvent.SunTime);
+            log("Event %d:\tTime: %d   Sunset time: %d", i+1, closeEvent.timestamp, closeEvent.SunTime);
         }
 
         // Infinite loop to keep the program running

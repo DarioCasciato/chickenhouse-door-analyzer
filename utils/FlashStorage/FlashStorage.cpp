@@ -30,7 +30,7 @@ void FlashStorage::init()
 
     // Read header from EEPROM
     uint8_t byteData[sizeof(header_)];  // Create a byte array to hold data
-    for (uint16_t i = 0; i < sizeof(header_); ++i)
+    for (uint16_t i = 0; i < sizeof(header_); i++)
     {
         byteData[i] = EEPROM.read(header_.startAddr_ - sizeof(header_) + i);
     }
@@ -79,7 +79,7 @@ bool FlashStorage::write(void* data)
         // Write byte array to EEPROM
         for (uint16_t i = 0; i < header_.dataSize_; ++i)
         {
-            EEPROM.write(header_.nextAddr_ + i, byteData[i]);
+            EEPROM.write(header_.nextAddr_ + i  + sizeof(header_), byteData[i]);
         }
 
         header_.nextAddr_ += header_.dataSize_;  // Increment the address for next write
@@ -107,7 +107,7 @@ bool FlashStorage::write(uint16_t index, void* data)
         memcpy(byteData, data, header_.dataSize_);  // Copy data to byte array
 
         // Calculate the exact EEPROM address to write to
-        uint16_t writeAddr = header_.startAddr_ + (index * header_.dataSize_);
+        uint16_t writeAddr = header_.startAddr_ + (index * header_.dataSize_) + sizeof(header_);
 
         // Write byte array to EEPROM
         for (uint16_t i = 0; i < header_.dataSize_; ++i)
@@ -140,7 +140,7 @@ bool FlashStorage::read(uint16_t index, void* data)
     if (index < header_.numEntries_)
     {
         // Account for header size when calculating read address
-        uint16_t readAddr = header_.startAddr_ + (index * header_.dataSize_);
+        uint16_t readAddr = header_.startAddr_ + (index * header_.dataSize_) + sizeof(header_);
         uint8_t byteData[header_.dataSize_];  // Create a byte array to hold data
 
 
