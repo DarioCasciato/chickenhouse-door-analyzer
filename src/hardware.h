@@ -15,15 +15,15 @@ namespace Hardware
     // Port definitions
     enum class Port : uint8_t
     {
-        reedMidway      = (uint8_t) GPIO::Port::D5,
+        //reedMidway      = (uint8_t) GPIO::Port::D5,
         reedEnd         = (uint8_t) GPIO::Port::D6
     };
 
 
-    extern uint8_t stateReedMidway;
-    extern uint8_t stateReedMidway;
+    //extern uint8_t stateReedMidway;
+    extern uint8_t stateReedEnd;
 
-    extern EdgeDetection reedMidway;
+    //extern EdgeDetection reedMidway;
     extern EdgeDetection reedEnd;
 
 

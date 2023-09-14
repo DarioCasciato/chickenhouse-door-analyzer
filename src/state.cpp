@@ -46,55 +46,78 @@ namespace State
     // State implementations
     void stateIdle()
     {
+        // Check if the reed switch detected a positive edge (closing)
         if(Hardware::reedEnd.getEdgePos())
         {
+            // Record the current time and sunset time
             closeEvent.timestamp = APIHandler::getUnixTime();
             closeEvent.SunTime = APIHandler::getSunsetTime();
 
+            // Log the event
             log("\nclosing detected! \nTime: %d\nSunset time: %d\n", closeEvent.timestamp, closeEvent.SunTime);
 
+            // Write the close event to flash memory
             Flash::closeEvents.write(static_cast<void*>(&closeEvent));
         }
 
+        // Check if the reed switch detected a negative edge (opening)
         if(Hardware::reedEnd.getEdgeNeg())
         {
+            // Record the current time and sunrise time
             openEvent.timestamp = APIHandler::getUnixTime();
             openEvent.SunTime = APIHandler::getSunriseTime();
 
-
+            // Write the open event to flash memory
             Flash::openEvents.write(static_cast<void*>(&openEvent));
+
+            // Log the event
             log("\nopening detected! \nTime: %d\nSunrise time: %d\n", openEvent.timestamp, openEvent.SunTime);
         }
 
-
+        // Start the timer if it hasn't started yet
         if(!changeState.elapsedStart())
             changeState.start();
 
+        // Check if 30 seconds have elapsed
         if(changeState.elapsed(30000))
         {
+            // Stop the timer
             changeState.stop();
+
+            // Change the state to flash reading
             state = States::st_flashReading;
         }
     }
 
+    // Function to read events from flash memory and log them
     void stateFlashReading()
     {
+        // Log open events
         log("\nOpen events:");
         for(uint8_t i = 0; i < Flash::openEvents.getNumEntries(); i++)
         {
+            // Read an open event from flash memory
             Flash::openEvents.read(i, &openEvent);
+
+            // Log the event
             log("Event %d:\tTime: %d   Sunrise time: %d", openEvent.timestamp, openEvent.SunTime);
         }
 
+        // Log close events
         log("\n\nClose events:");
         for(uint8_t i = 0; i < Flash::closeEvents.getNumEntries(); i++)
         {
+            // Read a close event from flash memory
             Flash::closeEvents.read(i, &closeEvent);
+
+            // Log the event
             log("Event %d:\tTime: %d   Sunset time: %d", closeEvent.timestamp, closeEvent.SunTime);
         }
 
+        // Infinite loop to keep the program running
         for(;;) { delay(500); }
     }
+
 } // namespace State
 
 //------------------------------------------------------------------------------

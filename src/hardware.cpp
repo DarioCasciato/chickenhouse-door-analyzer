@@ -8,10 +8,10 @@
 
 namespace Hardware
 {
-    uint8_t stateReedMidway = 0;
+    //uint8_t stateReedMidway = 0;
     uint8_t stateReedEnd = 0;
 
-    EdgeDetection reedMidway(&stateReedMidway);
+    //EdgeDetection reedMidway(&stateReedMidway);
     EdgeDetection reedEnd(&stateReedEnd);
 
     void init()
@@ -21,7 +21,7 @@ namespace Hardware
 
     void updateHardware()
     {
-        stateReedMidway = GPIO::getPort(Port::reedMidway);
+        //stateReedMidway = GPIO::getPort(Port::reedMidway);
         stateReedEnd = GPIO::getPort(Port::reedEnd);
     }
 } // namespace Hardware
