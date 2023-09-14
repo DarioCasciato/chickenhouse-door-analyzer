@@ -23,13 +23,6 @@ void setup()
   ESP.wdtEnable(WDTO_1S);
   Serial.begin(115200);
 
-  EEPROM.begin(sizeof(Flash::Structure));
-  // read first 14 bytes of the eeprom and print with log
-    for (int i = 0; i < 14; i++)
-    {
-        log("EEPROM %d: %d\n", i, EEPROM.read(i));
-    }
-
   Flash::init();
 
   Wifi::establish();
