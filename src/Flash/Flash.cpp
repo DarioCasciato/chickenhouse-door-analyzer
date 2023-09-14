@@ -14,6 +14,14 @@ namespace Flash
     FlashStorage openEvents(sizeof(Flash::Structure::openEvents), sizeof(EventData), MAGIC_NUMBER);
     FlashStorage closeEvents(sizeof(Flash::Structure::closeEvents), sizeof(EventData), MAGIC_NUMBER);
 
+    // Add initializers here
+    void initStorage()
+    {
+        openEvents.init();
+        closeEvents.init();
+    }
+
+
     void init()
     {
         #ifdef ESP8266
@@ -21,6 +29,8 @@ namespace Flash
         #else
         EEPROM.begin();
         #endif
+
+        initStorage();
 
         log("Flash memory initialized\n");
     }
