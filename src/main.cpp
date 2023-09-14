@@ -18,11 +18,10 @@ void refreshData();
 
 void setup()
 {
+  ESP.wdtEnable(WDTO_1S);
   Serial.begin(115200);
 
   Flash::init();
-
-  ESP.wdtEnable(WDTO_1S);
 
   Wifi::establish();
 }
