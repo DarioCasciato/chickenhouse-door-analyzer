@@ -10,6 +10,8 @@
 #include "Logging.h"
 #include "Flash/Flash.h"
 
+Timer changeState;
+
 namespace
 {
     EventData openEvent;
@@ -62,6 +64,16 @@ namespace State
 
             Flash::openEvents.write(&openEvent);
             log("\nopening detected! \nTime: %d\nSunrise time: %d\n", openEvent.timestamp, openEvent.SunTime);
+        }
+
+
+        if(!changeState.elapsedStart())
+            changeState.start();
+
+        if(changeState.elapsed(30000))
+        {
+            changeState.stop();
+            state = States::st_flashReading;
         }
     }
 
