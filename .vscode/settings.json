@@ -3,6 +3,7 @@
         "ostream": "cpp",
         "*.tcc": "cpp",
         "unordered_map": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "cmath": "cpp"
     }
 }
