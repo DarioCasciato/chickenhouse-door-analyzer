@@ -1,3 +1,11 @@
+ToDo:
+Add weather condition from tracking.
+- create new get weatherCondition function
+- Add new member EventData struct in Flash
+
+OpenWeathermap Reference weather condition: [OpenWeatherMap Documentation Weather Condition](https://openweathermap.org/current#:~:text=Weather%20condition%20id-,weather.main,-Group%20of%20weather)
+
+
 # Automatic Chicken Door Analyzer
 
 ## Description
