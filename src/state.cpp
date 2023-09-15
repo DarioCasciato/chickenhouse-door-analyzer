@@ -22,14 +22,14 @@ namespace
 
 namespace State
 {
-    // States state = States::st_idle;
-    States state = States::st_flashReading;
+    States state = States::st_idle;
+    //States state = States::st_flashReading;
 
     void stateDriver()
     {
         switch (State::state)
         {
-        case State::st_idle: stateIdle(); break;
+        case State::st_idle: stateRecordEvents(); break;
         case State::st_flashReading: stateFlashReading(); break;
 
         default:    // catch invalid state (implement safety backup)
@@ -44,7 +44,7 @@ namespace State
     }
 
     // State implementations
-    void stateIdle()
+    void stateRecordEvents()
     {
         // Check if the reed switch detected a positive edge (closing)
         if(Hardware::reedEnd.getEdgePos())
@@ -73,20 +73,6 @@ namespace State
             // Log the event
             log("\nopening detected! \nTime: %d\nSunrise time: %d\n", openEvent.timestamp, openEvent.SunTime);
         }
-
-        // Start the timer if it hasn't started yet
-        if(!changeState.elapsedStart())
-            changeState.start();
-
-        // Check if 30 seconds have elapsed
-        if(changeState.elapsed(30000))
-        {
-            // Stop the timer
-            changeState.stop();
-
-            // Change the state to flash reading
-            state = States::st_flashReading;
-        }
     }
 
     // Function to read events from flash memory and log them
@@ -100,7 +86,7 @@ namespace State
             Flash::openEvents.read(i, &openEvent);
 
             // Log the event
-            log("Event %d:\tTime: %d   Sunrise time: %d", openEvent.timestamp, openEvent.SunTime);
+            log("Event %d:\tTime: %d   Sunrise time: %d", i+1, openEvent.timestamp, openEvent.SunTime);
         }
 
         // Log close events
@@ -111,7 +97,7 @@ namespace State
             Flash::closeEvents.read(i, &closeEvent);
 
             // Log the event
-            log("Event %d:\tTime: %d   Sunset time: %d", closeEvent.timestamp, closeEvent.SunTime);
+            log("Event %d:\tTime: %d   Sunset time: %d", i+1, closeEvent.timestamp, closeEvent.SunTime);
         }
 
         // Infinite loop to keep the program running

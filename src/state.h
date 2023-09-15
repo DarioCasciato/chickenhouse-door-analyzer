@@ -19,7 +19,7 @@ namespace State
     void stateDriver();
 
     /// @brief Handler for the Idle state
-    void stateIdle();
+    void stateRecordEvents();
 
     /// @brief Handler for the Error state
     void stateFlashReading();

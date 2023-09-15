@@ -11,6 +11,7 @@
 #include "state.h"
 #include "Flash/Flash.h"
 #include "ESPWiFi/espWiFi.h"
+#include <EEPROM.h>
 
 void refreshData();
 
@@ -18,24 +19,24 @@ void refreshData();
 
 void setup()
 {
-  ESP.wdtEnable(WDTO_1S);
-  Serial.begin(115200);
+    ESP.wdtEnable(WDTO_1S);
+    Serial.begin(115200);
 
-  Flash::init();
+    Flash::init();
 
-  Wifi::establish();
+    Wifi::establish();
 }
 
 void loop()
 {
-  for (;;)
-  {
-    refreshData();
+    for (;;)
+    {
+        refreshData();
 
-    State::stateDriver();
+        State::stateDriver();
 
-    ESP.wdtFeed();
-  }
+        ESP.wdtFeed();
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -43,6 +44,6 @@ void loop()
 void refreshData()
 {
 
-  Hardware::updateHardware();
-  EdgeDetection::updateEdges();
+    Hardware::updateHardware();
+    EdgeDetection::updateEdges();
 }

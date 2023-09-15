@@ -12,13 +12,13 @@ FlashStorage::FlashStorage(uint16_t storageSize, uint8_t dataSize, uint16_t magi
     : initialized_(false) // Initialize to false
 {
     header_.magic = magicNumber;  // Assign the passed magic number
-    header_.startAddr_ = startOffsetAddress_ + sizeof(header_);
+    header_.startAddr_ = startOffsetAddress_;
     startOffsetAddress_ += storageSize + sizeof(header_);
     header_.storageSize_ = storageSize + sizeof(header_);
     header_.dataSize_ = dataSize;
     header_.numMaxEntries_ = storageSize / dataSize;
     header_.numEntries_ = 0;
-    header_.nextAddr_ = header_.startAddr_;
+    header_.nextAddr_ = header_.startAddr_ + sizeof(header_);
 }
 
 void FlashStorage::init()
@@ -30,9 +30,9 @@ void FlashStorage::init()
 
     // Read header from EEPROM
     uint8_t byteData[sizeof(header_)];  // Create a byte array to hold data
-    for (uint16_t i = 0; i < sizeof(header_); ++i)
+    for (uint16_t i = 0; i < sizeof(header_); i++)
     {
-        byteData[i] = EEPROM.read(header_.startAddr_ - sizeof(header_) + i);
+        byteData[i] = EEPROM.read(header_.startAddr_ + i);
     }
 
     // Cast the read byte array back to a Header struct for easier comparison
@@ -59,7 +59,7 @@ void FlashStorage::updateHeader()
     memcpy(byteData, &header_, sizeof(header_));  // Copy data to byte array
 
     // Write byte array to EEPROM
-    for (uint16_t i = 0; i < sizeof(header_); ++i)
+    for (uint16_t i = 0; i < sizeof(header_); i++)
     {
         EEPROM.write(header_.startAddr_ + i, byteData[i]);
     }
@@ -71,13 +71,13 @@ void FlashStorage::updateHeader()
 
 bool FlashStorage::write(void* data)
 {
-    if (header_.numEntries_ + header_.dataSize_ <= header_.numMaxEntries_)
+    if (header_.numEntries_ + 1 <= header_.numMaxEntries_)
     {
         uint8_t byteData[header_.dataSize_];  // Create a byte array to hold data
         memcpy(byteData, data, header_.dataSize_);  // Copy data to byte array
 
         // Write byte array to EEPROM
-        for (uint16_t i = 0; i < header_.dataSize_; ++i)
+        for (uint16_t i = 0; i < header_.dataSize_; i++)
         {
             EEPROM.write(header_.nextAddr_ + i, byteData[i]);
         }
@@ -107,10 +107,10 @@ bool FlashStorage::write(uint16_t index, void* data)
         memcpy(byteData, data, header_.dataSize_);  // Copy data to byte array
 
         // Calculate the exact EEPROM address to write to
-        uint16_t writeAddr = header_.startAddr_ + (index * header_.dataSize_);
+        uint16_t writeAddr = (header_.startAddr_ + sizeof(header_)) + (index * header_.dataSize_);
 
         // Write byte array to EEPROM
-        for (uint16_t i = 0; i < header_.dataSize_; ++i)
+        for (uint16_t i = 0; i < header_.dataSize_; i++)
         {
             EEPROM.write(writeAddr + i, byteData[i]);
         }
@@ -140,12 +140,12 @@ bool FlashStorage::read(uint16_t index, void* data)
     if (index < header_.numEntries_)
     {
         // Account for header size when calculating read address
-        uint16_t readAddr = header_.startAddr_ + (index * header_.dataSize_);
+        uint16_t readAddr = (header_.startAddr_ + sizeof(header_)) + (index * header_.dataSize_);
         uint8_t byteData[header_.dataSize_];  // Create a byte array to hold data
 
 
         // Read byte array from EEPROM
-        for (uint16_t i = 0; i < header_.dataSize_; ++i)
+        for (uint16_t i = 0; i < header_.dataSize_; i++)
         {
             byteData[i] = EEPROM.read(readAddr + i);
         }
@@ -168,7 +168,7 @@ bool FlashStorage::readLast(void* data)
         uint8_t byteData[header_.dataSize_];  // Create a byte array to hold data
 
         // Read byte array from EEPROM
-        for (uint16_t i = 0; i < header_.dataSize_; ++i)
+        for (uint16_t i = 0; i < header_.dataSize_; i++)
         {
             byteData[i] = EEPROM.read(readAddr + i);
         }
@@ -185,13 +185,13 @@ bool FlashStorage::readLast(void* data)
 
 bool FlashStorage::clear()
 {
-    for (uint16_t i = sizeof(header_); i < header_.storageSize_; ++i)
+    for (uint16_t i = sizeof(header_); i < header_.storageSize_; i++)
     {
-        EEPROM.write(header_.startAddr_ + i, 0);
+        EEPROM.write((header_.startAddr_ + sizeof(header_)) + i, 0);
     }
 
     header_.numEntries_ = 0;
-    header_.nextAddr_ = header_.startAddr_;
+    header_.nextAddr_ = header_.startAddr_ + sizeof(header_);
 
     updateHeader();
 
