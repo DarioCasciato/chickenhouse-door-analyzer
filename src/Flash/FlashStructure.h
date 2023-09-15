@@ -16,10 +16,31 @@ namespace Flash
     };
 } // namespace Flash
 
+enum class WeatherMain : uint8_t
+{
+    Clear,
+    Clouds,
+    Rain,
+    Drizzle,
+    Thunderstorm,
+    Snow,
+    Mist,
+    Smoke,
+    Haze,
+    Dust,
+    Fog,
+    Sand,
+    Ash,
+    Squall,
+    Tornado,
+    Unknown = 0xFF // For any other conditions not listed
+};
+
 struct EventData
 {
     uint32_t timestamp;
     uint32_t SunTime;
+    WeatherMain weatherCondition;
 };
 
 

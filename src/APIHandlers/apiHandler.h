@@ -5,6 +5,7 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include "Flash/FlashStructure.h"
 
 namespace APIHandler
 {
@@ -22,4 +23,9 @@ namespace APIHandler
     ///
     /// @return The todays sunset time.
     uint32_t getSunriseTime();
+
+    /// @brief Sends a GET request to the API.
+    ///
+    /// @return The current weather condition.
+    WeatherMain getWeatherCondition();
 }

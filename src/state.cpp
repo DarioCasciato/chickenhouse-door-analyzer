@@ -52,6 +52,7 @@ namespace State
             // Record the current time and sunset time
             closeEvent.timestamp = APIHandler::getUnixTime();
             closeEvent.SunTime = APIHandler::getSunsetTime();
+            closeEvent.weatherCondition = APIHandler::getWeatherCondition();
 
             // Log the event
             log("\nclosing detected! \nTime: %d\nSunset time: %d\n", closeEvent.timestamp, closeEvent.SunTime);
@@ -66,6 +67,7 @@ namespace State
             // Record the current time and sunrise time
             openEvent.timestamp = APIHandler::getUnixTime();
             openEvent.SunTime = APIHandler::getSunriseTime();
+            openEvent.weatherCondition = APIHandler::getWeatherCondition();
 
             // Write the open event to flash memory
             Flash::openEvents.write(static_cast<void*>(&openEvent));

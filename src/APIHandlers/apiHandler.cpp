@@ -48,7 +48,7 @@ uint32_t APIHandler::getSunsetTime()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_suntime) + String(api_key));
+        http.begin(client, String(api_openweather) + String(api_key));
         int httpCode = http.GET();
 
         if (httpCode > 0)
@@ -79,7 +79,7 @@ uint32_t APIHandler::getSunriseTime()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_suntime) + String(api_key));
+        http.begin(client, String(api_openweather) + String(api_key));
         int httpCode = http.GET();
 
         if (httpCode > 0)
@@ -100,4 +100,51 @@ uint32_t APIHandler::getSunriseTime()
         }
     }
     return sunriseTime;
+}
+
+WeatherMain APIHandler::getWeatherCondition()
+{
+    WeatherMain weatherCondition = WeatherMain::Unknown;
+    if (WiFi.status() == WL_CONNECTED)
+    {
+        WiFiClient client;
+        HTTPClient http;
+        http.begin(client, String(api_openweather) + String(api_key));
+        int httpCode = http.GET();
+
+        if (httpCode > 0)
+        {
+            String payload = http.getString();
+            http.end();  // Close the connection
+
+            DynamicJsonDocument doc(2048);  // Create a DynamicJsonDocument
+            DeserializationError error = deserializeJson(doc, payload);
+
+            if (error)
+            {
+                Serial.println("Failed to parse JSON");
+                return WeatherMain::Unknown;
+            }
+
+            String weather = doc["weather"][0]["main"];  // Extract weather condition
+
+            if (weather == "Clear")                 weatherCondition = WeatherMain::Clear;
+            else if (weather == "Clouds")           weatherCondition = WeatherMain::Clouds;
+            else if (weather == "Rain")             weatherCondition = WeatherMain::Rain;
+            else if (weather == "Drizzle")          weatherCondition = WeatherMain::Drizzle;
+            else if (weather == "Thunderstorm")     weatherCondition = WeatherMain::Thunderstorm;
+            else if (weather == "Snow")             weatherCondition = WeatherMain::Snow;
+            else if (weather == "Mist")             weatherCondition = WeatherMain::Mist;
+            else if (weather == "Smoke")            weatherCondition = WeatherMain::Smoke;
+            else if (weather == "Haze")             weatherCondition = WeatherMain::Haze;
+            else if (weather == "Dust")             weatherCondition = WeatherMain::Dust;
+            else if (weather == "Fog")              weatherCondition = WeatherMain::Fog;
+            else if (weather == "Sand")             weatherCondition = WeatherMain::Sand;
+            else if (weather == "Ash")              weatherCondition = WeatherMain::Ash;
+            else if (weather == "Squall")           weatherCondition = WeatherMain::Squall;
+            else if (weather == "Tornado")          weatherCondition = WeatherMain::Tornado;
+            else                                    weatherCondition = WeatherMain::Unknown;
+        }
+    }
+    return weatherCondition;
 }
