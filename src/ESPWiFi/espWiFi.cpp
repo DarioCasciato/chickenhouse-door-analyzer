@@ -7,8 +7,8 @@
 
 namespace
 {
-    inline const char* ssid = "Wi-Fi 2";
-    inline const char* password = "rc7145!!";
+    inline const char* ssid = "SSID_HERE";
+    inline const char* password = "PASSWORD_HERE";
 }
 
 
