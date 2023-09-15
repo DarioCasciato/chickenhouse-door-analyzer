@@ -55,10 +55,10 @@ namespace State
             closeEvent.weatherCondition = APIHandler::getWeatherCondition();
 
             // Log the event
-            log("\nclosing detected! \nTime: %d\nSunset time: %d\n", closeEvent.timestamp, closeEvent.SunTime);
+            log("\nclosing detected! \nTime: %d\nSunset time: %d\nWeather: %d", closeEvent.timestamp, closeEvent.SunTime, closeEvent.weatherCondition);
 
             // Write the close event to flash memory
-            Flash::closeEvents.write(static_cast<void*>(&closeEvent));
+            Flash::closeEvents.write(&closeEvent);
         }
 
         // Check if the reed switch detected a negative edge (opening)
@@ -70,10 +70,10 @@ namespace State
             openEvent.weatherCondition = APIHandler::getWeatherCondition();
 
             // Write the open event to flash memory
-            Flash::openEvents.write(static_cast<void*>(&openEvent));
+            Flash::openEvents.write(&openEvent);
 
             // Log the event
-            log("\nopening detected! \nTime: %d\nSunrise time: %d\n", openEvent.timestamp, openEvent.SunTime);
+            log("\nopening detected! \nTime: %d\nSunrise time: %d\nWeather: %d", openEvent.timestamp, openEvent.SunTime, openEvent.weatherCondition);
         }
     }
 
@@ -88,7 +88,7 @@ namespace State
             Flash::openEvents.read(i, &openEvent);
 
             // Log the event
-            log("Event %d:\tTime: %d   Sunrise time: %d", i+1, openEvent.timestamp, openEvent.SunTime);
+            log("Event %d:\tTime: %d   Sunrise time: %d   Weather: %d", i+1, openEvent.timestamp, openEvent.SunTime, openEvent.weatherCondition);
         }
 
         // Log close events
@@ -99,7 +99,7 @@ namespace State
             Flash::closeEvents.read(i, &closeEvent);
 
             // Log the event
-            log("Event %d:\tTime: %d   Sunset time: %d", i+1, closeEvent.timestamp, closeEvent.SunTime);
+            log("Event %d:\tTime: %d   Sunset time: %d   Weather: %d", i+1, closeEvent.timestamp, closeEvent.SunTime, closeEvent.weatherCondition);
         }
 
         // Infinite loop to keep the program running
