@@ -93,7 +93,7 @@ namespace State
     void stateFlashReading()
     {
         // Log open events
-        log("\nOpen events:");
+        log("\n\nOpen events:");
         for(uint8_t i = 0; i < Flash::openEvents.getNumEntries(); i++)
         {
             // Read an open event from flash memory
