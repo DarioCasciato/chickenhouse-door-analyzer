@@ -1,91 +1,33 @@
-# Arduino Firmware Template Repository
+# Automatic Chicken Door Analyzer
 
-This is a template repository for developing firmware using Object-Oriented Programming (OOP) principles with Arduino and PlatformIO. It provides a structured starting point for creating Arduino projects that follow best practices for modularity, maintainability, and scalability.
+## Description
 
-## Features
+An ESP8266-based analytics tool designed to monitor and log the behavior of an automatic chicken door operated by a light sensor. This project captures door states and correlates them with sunrise and sunset times to provide data-driven insights.
 
-- Object-Oriented Programming approach for organizing code into reusable and modular classes.
-- PlatformIO integration for easy project management, dependency management, and build system configuration.
-- Basic directory structure to organize your code effectively.
+## Installation
 
-## Prerequisites
+1. Clone this repository.
+2. Install the required libraries.
+3. Flash the firmware onto your ESP8266.
 
-To use this template repository, you need to have the following installed:
+## How it Works
 
-- [Arduino IDE](https://www.arduino.cc/en/software)
-- [PlatformIO Core](https://platformio.org/platformio-ide)
-- [PlatformIO CLI](https://docs.platformio.org/en/latest/core/installation.html)
-- [Git](https://git-scm.com/)
+### State Management
 
-## Getting Started
+The firmware uses a state machine to manage different functionalities. The two main states are:
 
-To create a new firmware project using this template repository, follow these steps:
+1. **Idle State (`st_idle`)** : In this state, the system listens for changes in the reed sensor to detect if the chicken door is opening or closing. When a change is detected, the current time and either the sunrise or sunset time are logged into flash memory.
+2. **Flash Reading State (`st_flashReading`)** : This state is responsible for reading the logged events from flash memory and displaying them for analysis.
 
-1. Click on the "Use this template" button at the top of the repository page to create a new repository based on this template.
-2. Clone the newly created repository to your local machine using Git.
-   ```
-   git clone https://github.com/your-username/your-project.git
-   ```
-3. Change into the project directory.
-   ```
-   cd your-project
-   ```
-4. Open the project in your preferred integrated development environment (i personally use VS-Code).
-5. Build and upload the firmware to your Arduino board using PlatformIO.
+#### Idle State
 
-## Directory Structure
+* **Reed Sensor Positive Edge** : When the reed sensor detects a door closing, the current Unix timestamp and the sunset time are captured and logged into flash memory.
+* **Reed Sensor Negative Edge** : When the reed sensor detects a door opening, the current Unix timestamp and the sunrise time are captured and logged into flash memory.
 
-The directory structure of this template repository is as follows:
+#### Flash Reading State
 
-```
-│
-├───src
-│       configurations.h
-│       hardware.cpp
-│       hardware.h
-│       main.cpp
-│       state.cpp
-│       state.h
-│
-└───utils
-    ├───Arduino
-    ├───Buzzer
-    ├───EdgeDetection
-    ├───LED
-    ├───LED_RGB
-    ├───Potentiometer
-    ├───Security
-    └───Timer
-```
+In this state, the system reads all the logged open and close events from flash memory and logs them for analysis.
 
-- **`src/`**: This directory contains the main firmware code. You can create additional source files as needed, such as configuration files (`configurations.h`) or modules (`hardware.cpp`, `hardware.h`, etc.).
-- **`utils/`**: contains useful libraries
-- **`README.md`**: This file provides an overview and instructions for the template repository.
-
-## Removing Example Code
-
-If you prefer to start with a clean slate and remove the example code provided in this template, you can use the "remove-template" branch. This branch has already removed the example code and is ready for you to begin your project without any pre-existing code.
-
-### Instructions:
-
-1. Switch to the "remove-template" branch using the following command:
-
-   ```
-   git checkout remove-template
-   ```
-2. Merge the "remove-template" branch into the "main" branch:
-
-   ```
-   git merge remove-template
-   ```
-
-   **Note:** Before merging, make sure you have committed or stashed any changes you made to the "main" branch to avoid conflicts.
-3. Once the merge is complete, the "main" branch will now contain only the directory structure and the README.md file.
-4. You can now start building your firmware project from this clean template.
-
-### Additional Information:
-
-The "remove-template" branch was created to provide users with a minimalist starting point, eliminating any example code that might not be relevant to your specific project requirements.
 
 ## Contributing
 
@@ -94,10 +36,3 @@ Contributions to improve this template repository are always welcome. If you fin
 ## License
 
 This template repository is licensed under the [MIT License](LICENSE). Feel free to use it as a starting point for your own firmware projects.
-
-## Resources
-
-- [Arduino Reference](https://www.arduino.cc/reference/en/)
-- [PlatformIO Documentation](https://docs.platformio.org/)
-- [Arduino Forum](https://forum.arduino.cc/)
-- [PlatformIO Community](https://community.platformio.org/)
