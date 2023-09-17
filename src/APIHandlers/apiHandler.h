@@ -29,6 +29,11 @@ namespace APIHandler
     /// @return The current weather condition.
     WeatherMain getWeatherCondition();
 
+    /// @brief Converts the weather condition enum to a string.
+    ///
+    /// @param weatherCondition The weather condition enum.
+    const char* enumToString(WeatherMain weatherCondition);
+
     namespace Notification
     {
         /// @brief Sends a GET request to the API for door open notification.

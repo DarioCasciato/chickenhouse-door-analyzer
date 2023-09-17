@@ -150,6 +150,28 @@ WeatherMain APIHandler::getWeatherCondition()
     return weatherCondition;
 }
 
+const char* APIHandler::enumToString(WeatherMain weatherCondition)
+{
+  switch(weatherCondition) {
+    case WeatherMain::Clear: return "Clear";
+    case WeatherMain::Clouds: return "Clouds";
+    case WeatherMain::Rain: return "Rain";
+    case WeatherMain::Drizzle: return "Drizzle";
+    case WeatherMain::Thunderstorm: return "Thunderstorm";
+    case WeatherMain::Snow: return "Snow";
+    case WeatherMain::Mist: return "Mist";
+    case WeatherMain::Smoke: return "Smoke";
+    case WeatherMain::Haze: return "Haze";
+    case WeatherMain::Dust: return "Dust";
+    case WeatherMain::Fog: return "Fog";
+    case WeatherMain::Sand: return "Sand";
+    case WeatherMain::Ash: return "Ash";
+    case WeatherMain::Squall: return "Squall";
+    case WeatherMain::Tornado: return "Tornado";
+    default: return "Unknown";
+  }
+}
+
 
 void APIHandler::Notification::doorOpen()
 {

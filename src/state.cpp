@@ -22,8 +22,8 @@ namespace
 
 namespace State
 {
-    States state = States::st_idle;
-    //States state = States::st_flashReading;
+    //States state = States::st_idle;
+    States state = States::st_flashReading;
 
     void stateDriver()
     {
@@ -55,7 +55,7 @@ namespace State
             closeEvent.weatherCondition = APIHandler::getWeatherCondition();
 
             // Log the event
-            log("\nclosing detected! \nTime: %d\nSunset time: %d\nWeather: %d", closeEvent.timestamp, closeEvent.SunTime, closeEvent.weatherCondition);
+            log("\nclosing detected! \nTime: %d\nSunset time: %d\nWeather: %s", closeEvent.timestamp, closeEvent.SunTime, APIHandler::enumToString(closeEvent.weatherCondition));
 
             // Write the close event to flash memory
             Flash::closeEvents.write(&closeEvent);
@@ -75,7 +75,7 @@ namespace State
             APIHandler::Notification::doorOpen();
 
             // Log the event
-            log("\nopening detected! \nTime: %d\nSunrise time: %d\nWeather: %d", openEvent.timestamp, openEvent.SunTime, openEvent.weatherCondition);
+            log("\nopening detected! \nTime: %d\nSunrise time: %d\nWeather: %s", openEvent.timestamp, openEvent.SunTime, APIHandler::enumToString(openEvent.weatherCondition));
         }
     }
 
@@ -90,7 +90,7 @@ namespace State
             Flash::openEvents.read(i, &openEvent);
 
             // Log the event
-            log("Event %d:\tTime: %d   Sunrise time: %d   Weather: %d", i+1, openEvent.timestamp, openEvent.SunTime, openEvent.weatherCondition);
+            log("Event %d:\tTime: %d   Sunrise time: %d   Weather: %s", i+1, openEvent.timestamp, openEvent.SunTime, APIHandler::enumToString(openEvent.weatherCondition));
         }
 
         // Log close events
@@ -101,7 +101,7 @@ namespace State
             Flash::closeEvents.read(i, &closeEvent);
 
             // Log the event
-            log("Event %d:\tTime: %d   Sunset time: %d   Weather: %d", i+1, closeEvent.timestamp, closeEvent.SunTime, closeEvent.weatherCondition);
+            log("Event %d:\tTime: %d   Sunset time: %d   Weather: %s", i+1, closeEvent.timestamp, closeEvent.SunTime, APIHandler::enumToString(closeEvent.weatherCondition));
         }
 
         // Infinite loop to keep the program running
