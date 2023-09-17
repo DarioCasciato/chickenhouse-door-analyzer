@@ -4,13 +4,7 @@
 
 #include "espWiFi.h"
 #include "configurations.h"
-
-namespace
-{
-    inline const char* ssid = "SSID_HERE";
-    inline const char* password = "PASSWORD_HERE";
-}
-
+#include "../APIHandlers/apiKey.h"
 
 void Wifi::establish()
 {

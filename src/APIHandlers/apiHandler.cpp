@@ -4,6 +4,7 @@
 
 #include "apiHandler.h"
 #include "configurations.h"
+#include "apiKey.h"
 #include <ArduinoJson.h>
 
 // returs the current unix time. uses api_datetime from configurations.h
@@ -48,7 +49,7 @@ uint32_t APIHandler::getSunsetTime()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_openweather) + String(api_key));
+        http.begin(client, String(api_openweather) + String(api_key_owm));
         int httpCode = http.GET();
 
         if (httpCode > 0)
@@ -79,7 +80,7 @@ uint32_t APIHandler::getSunriseTime()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_openweather) + String(api_key));
+        http.begin(client, String(api_openweather) + String(api_key_owm));
         int httpCode = http.GET();
 
         if (httpCode > 0)
@@ -109,7 +110,7 @@ WeatherMain APIHandler::getWeatherCondition()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_openweather) + String(api_key));
+        http.begin(client, String(api_openweather) + String(api_key_owm));
         int httpCode = http.GET();
 
         if (httpCode > 0)
@@ -147,4 +148,79 @@ WeatherMain APIHandler::getWeatherCondition()
         }
     }
     return weatherCondition;
+}
+
+const char* APIHandler::enumToString(WeatherMain weatherCondition)
+{
+  switch(weatherCondition) {
+    case WeatherMain::Clear: return "Clear";
+    case WeatherMain::Clouds: return "Clouds";
+    case WeatherMain::Rain: return "Rain";
+    case WeatherMain::Drizzle: return "Drizzle";
+    case WeatherMain::Thunderstorm: return "Thunderstorm";
+    case WeatherMain::Snow: return "Snow";
+    case WeatherMain::Mist: return "Mist";
+    case WeatherMain::Smoke: return "Smoke";
+    case WeatherMain::Haze: return "Haze";
+    case WeatherMain::Dust: return "Dust";
+    case WeatherMain::Fog: return "Fog";
+    case WeatherMain::Sand: return "Sand";
+    case WeatherMain::Ash: return "Ash";
+    case WeatherMain::Squall: return "Squall";
+    case WeatherMain::Tornado: return "Tornado";
+    default: return "Unknown";
+  }
+}
+
+
+void APIHandler::Notification::doorOpen()
+{
+    if(WiFi.status() == WL_CONNECTED)
+    {
+        WiFiClient client;
+        HTTPClient http;
+        http.begin(client, String(request_open) + String(api_key_ifttt));
+        int httpResponseCode = http.POST("");
+
+            // Check the response code
+        if (httpResponseCode == HTTP_CODE_OK) {
+            Serial.print("Notification sent: ");
+            Serial.println("DOOR_OPEN_EVENT");
+        }
+
+        else
+        {
+            Serial.print("Error sending notification. Response code: ");
+            Serial.println(httpResponseCode);
+        }
+
+        // Close the connection
+        http.end();
+    }
+}
+
+void APIHandler::Notification::doorClose()
+{
+    if(WiFi.status() == WL_CONNECTED)
+    {
+        WiFiClient client;
+        HTTPClient http;
+        http.begin(client, String(request_close) + String(api_key_ifttt));
+        int httpResponseCode = http.POST("");
+
+            // Check the response code
+        if (httpResponseCode == HTTP_CODE_OK) {
+            Serial.print("Notification sent: ");
+            Serial.println("DOOR_CLOSE_EVENT");
+        }
+
+        else
+        {
+            Serial.print("Error sending notification. Response code: ");
+            Serial.println(httpResponseCode);
+        }
+
+        // Close the connection
+        http.end();
+    }
 }
