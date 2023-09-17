@@ -4,6 +4,7 @@
 
 #include "apiHandler.h"
 #include "configurations.h"
+#include "apiKey.h"
 #include <ArduinoJson.h>
 
 // returs the current unix time. uses api_datetime from configurations.h
@@ -48,7 +49,7 @@ uint32_t APIHandler::getSunsetTime()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_openweather) + String(api_key));
+        http.begin(client, String(api_openweather) + String(api_key_owm));
         int httpCode = http.GET();
 
         if (httpCode > 0)
@@ -79,7 +80,7 @@ uint32_t APIHandler::getSunriseTime()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_openweather) + String(api_key));
+        http.begin(client, String(api_openweather) + String(api_key_owm));
         int httpCode = http.GET();
 
         if (httpCode > 0)
@@ -109,7 +110,7 @@ WeatherMain APIHandler::getWeatherCondition()
     {
         WiFiClient client;
         HTTPClient http;
-        http.begin(client, String(api_openweather) + String(api_key));
+        http.begin(client, String(api_openweather) + String(api_key_owm));
         int httpCode = http.GET();
 
         if (httpCode > 0)
@@ -147,4 +148,57 @@ WeatherMain APIHandler::getWeatherCondition()
         }
     }
     return weatherCondition;
+}
+
+
+void APIHandler::Notification::doorOpen()
+{
+    if(WiFi.status() == WL_CONNECTED)
+    {
+        WiFiClient client;
+        HTTPClient http;
+        http.begin(client, String(request_open) + String(api_key_ifttt));
+        int httpResponseCode = http.POST("");
+
+            // Check the response code
+        if (httpResponseCode == HTTP_CODE_OK) {
+            Serial.print("Notification sent: ");
+            Serial.println("DOOR_OPEN_EVENT");
+        }
+
+        else
+        {
+            Serial.print("Error sending notification. Response code: ");
+            Serial.println(httpResponseCode);
+        }
+
+        // Close the connection
+        http.end();
+    }
+}
+
+void APIHandler::Notification::doorClose()
+{
+    if(WiFi.status() == WL_CONNECTED)
+    {
+        WiFiClient client;
+        HTTPClient http;
+        http.begin(client, String(request_close) + String(api_key_ifttt));
+        int httpResponseCode = http.POST("");
+
+            // Check the response code
+        if (httpResponseCode == HTTP_CODE_OK) {
+            Serial.print("Notification sent: ");
+            Serial.println("DOOR_CLOSE_EVENT");
+        }
+
+        else
+        {
+            Serial.print("Error sending notification. Response code: ");
+            Serial.println(httpResponseCode);
+        }
+
+        // Close the connection
+        http.end();
+    }
 }

@@ -59,6 +59,7 @@ namespace State
 
             // Write the close event to flash memory
             Flash::closeEvents.write(&closeEvent);
+            APIHandler::Notification::doorClose();
         }
 
         // Check if the reed switch detected a negative edge (opening)
@@ -71,6 +72,7 @@ namespace State
 
             // Write the open event to flash memory
             Flash::openEvents.write(&openEvent);
+            APIHandler::Notification::doorOpen();
 
             // Log the event
             log("\nopening detected! \nTime: %d\nSunrise time: %d\nWeather: %d", openEvent.timestamp, openEvent.SunTime, openEvent.weatherCondition);

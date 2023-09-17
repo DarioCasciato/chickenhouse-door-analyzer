@@ -28,4 +28,14 @@ namespace APIHandler
     ///
     /// @return The current weather condition.
     WeatherMain getWeatherCondition();
+
+    namespace Notification
+    {
+        /// @brief Sends a GET request to the API for door open notification.
+        void doorOpen();
+
+        /// @brief Sends a GET request to the API for door close notification.
+        void doorClose();
+    } // namespace Notification
+
 }
